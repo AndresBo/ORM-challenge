@@ -8,6 +8,62 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://db_dev:paco@local
 
 db = SQLAlchemy(app)
 # CLI COMMANDS AREA
+@app.cli.command("create")
+def create_db():
+  db.create_all()
+  print("Tables Created")
+
+
+@app.cli.command("drop")
+def drop_db(): 
+    db.drop_all()
+    print("Tables dropped")
+
+
+@app.cli.command("seed")
+def seed_db():
+    movie1 = Movie(
+      title = "Jurassic Park",
+      genre = "Action",
+      length = "120",
+      year = 1994
+    )
+    db.session.add(movie1)
+
+    movie2 = Movie(
+      title = "Dune",
+      genre = "Science Fiction",
+      length = 180,
+      year = 2020
+    )
+    db.session.add(movie2)
+
+    actor1 = Actor(
+      name = "Robin Williams",
+      gender = "Male",
+      country = "USA",
+      dob = '1950-10-01',
+    )
+    db.session.add(actor1)
+
+    actor2 = Actor(
+      name = "Ethan Hawke",
+      gender = "Male",
+      country = "USA",
+      dob = '1950-10-01',
+    )
+    db.session.add(actor2)
+
+    actor3 = Actor(
+      name = "Uma Thurman",
+      gender = "Female",
+      country = "USA",
+      dob = '1950-10-01',
+    )
+    db.session.add(actor3)
+
+    db.session.commit()
+
 
 # MODELS AREA
 class Movie(db.Model):
@@ -19,19 +75,19 @@ class Movie(db.Model):
     title = db.Column(db.String())
     genre = db.Column(db.String())
     length = db.Column(db.Integer())
-    year = db.Column(db.Date())
+    year = db.Column(db.Integer())
 
 
 class Actor(db.Model):
-  #define the table name for the db
-  __tablename__ = "ACTORS"
-  #set the primary key
-  id = db.Column(db.Integer,primary_key = True)
-  #set rest of attributes
-  name = db.Column(db.String())
-  gender = db.Column(db.String())
-  country = db.Column(db.String())
-  dob = db.Column(db.Date())
+    #define the table name for the db
+    __tablename__ = "ACTORS"
+    #set the primary key
+    id = db.Column(db.Integer,primary_key = True)
+    #set rest of attributes
+    name = db.Column(db.String())
+    gender = db.Column(db.String())
+    country = db.Column(db.String())
+    dob = db.Column(db.Date())
 
 # SCHEMAS AREA
 
