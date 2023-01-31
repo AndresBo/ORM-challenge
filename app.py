@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 
@@ -7,6 +8,7 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://db_dev:paco@localhost:5432/ripe_tomatoes_db" 
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 # CLI COMMANDS AREA
 @app.cli.command("create")
 def create_db():
@@ -90,9 +92,34 @@ class Actor(db.Model):
     dob = db.Column(db.Date())
 
 # SCHEMAS AREA
+class ActorSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "gender", "country", "dob")
+
+actors_schema = ActorSchema(many=True)
+
+
+class MovieSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "title", "genre", "length", "year")
+
+movies_schema = MovieSchema(many=True)
 
 # ROUTING AREA
 
 @app.route("/")
 def hello():
   return "Welcome to Ripe Tomatoes API"
+
+@app.route("/movies", methods = ["GET"])
+def get_actors():
+    movies_list = Movie.query.all()
+    result = movies_schema.dump(movies_list)
+    return jsonify(result)
+
+
+@app.route("/actors", methods = ["GET"])
+def get_cards():
+    actors_list = Actor.query.all()
+    result = actors_schema.dump(actors_list)
+    return jsonify(result)
