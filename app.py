@@ -243,7 +243,7 @@ def actor_delete(id):
     db.session.commit()
     # return the card in the response
     return jsonify(actor_schema.dump(actor))
-   ########################################### working here! 
+   
 
 
 @app.route("/auth/signup", methods=["POST"])
